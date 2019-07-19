@@ -45,7 +45,7 @@ Before:
 
 After:
 
-![Disassembly with devi](https://github.com/murx-/devi/blob/master/images/cpp-test-assembly-wo-devi.png)
+![Disassembly with devi](https://github.com/murx-/devi/blob/master/images/cpp-test-assembly-w-devi.png)
 
 ### Xrefs
 
