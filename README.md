@@ -30,31 +30,32 @@ Load JSON file into IDA Pro.
 
 Before:
 
-![Disassembly before devi](http://github.com/murx-/devi/blob/master/images/cpp-test-assembly-wo-devi.png)
+![Disassembly before devi](https://github.com/murx-/devi/blob/master/images/cpp-test-assembly-wo-devi.png)
+
 
 After:
 
-![Disassembly with devi](http://github.com/murx-/devi/blob/master/images/cpp-test-assembly-wo-devi.png)
+![Disassembly with devi](https://github.com/murx-/devi/blob/master/images/cpp-test-assembly-wo-devi.png)
 
 ### Xrefs
 
 Before:
 
-![Xrefs before devi](http://github.com/murx-/devi/blob/master/images/cpp-test-xrefs-wo-devi.PNG)
+![Xrefs before devi](https://github.com/murx-/devi/blob/master/images/cpp-test-xrefs-wo-devi.PNG)
 
 After:
 
-![Xrefs after devi](http://github.com/murx-/devi/blob/master/images/cpp-test-xrefs-w-devi.PNG)
+![Xrefs after devi](https://github.com/murx-/devi/blob/master/images/cpp-test-xrefs-w-devi.PNG)
 
 ### Xref Graph
 
 Before:
 
-![Xrefs graph before devi](http://github.com/murx-/devi/blob/master/images/cpp-test-xrefs-graphs-wo-devi2.PNG)
+![Xrefs graph before devi](https://github.com/murx-/devi/blob/master/images/cpp-test-xrefs-graphs-wo-devi2.PNG)
 
 After:
 
-![Xrefs graph after devi](http://github.com/murx-/devi/blob/master/images/cpp-test-xrefs-graphs-w-devi.PNG)
+![Xrefs graph after devi](https://github.com/murx-/devi/blob/master/images/cpp-test-xrefs-graphs-w-devi.PNG)
 
 ## Supported Frameworks
 
