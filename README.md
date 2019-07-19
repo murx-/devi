@@ -8,8 +8,18 @@ Devi consits of two components, one for dynamic analysis (DBI)  and one for stat
 
 ### Running the Frida Tracer
 
-```bash
+#### Minimal Command Line
+
+Spawn process:
+
+```
 python devi_frida.py -m <module_name> -o <JSON_output> -- <software_to_trace> <arguments for binary>
+```
+
+Attach to process:
+
+```
+python devi_frida.py -m <module_name> -s <sysmbol_to_hook> -o <JSON_output> -p <pid_of_target>
 ```
 
 ### IDA Plugin
@@ -18,7 +28,7 @@ Copy devi\_ida.py to your IDA plugin folder or load the script via File -> Scrip
 
 Once devi is loaded you can load the JSON file containing the virtual calls via File -> Load File -> Load Virtual Calls. 
 
-## Example
+## Minimal Example
 
 ```bash
 python devi_frida.py -m main -o virtual_calls.json -- tests/HelloWorld myArgs
