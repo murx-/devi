@@ -120,7 +120,9 @@ class Devi:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Devirtualize Virtual Calls")
+    parser = argparse.ArgumentParser(description="Devirtualize Virtual Calls",
+        usage="\tdevi_frida.py -m <module_name> -o <JSON_output> -- <software_to_trace> <arguments for binary>\n"+
+            "\tdevi_frida.py -m <module_name> -s <sysmbol_to_hook> -o <JSON_output> -p <pid_of_target>")
     parser.add_argument("-o", "--out-file",
                       help="Output location", required=True)
     parser.add_argument(
