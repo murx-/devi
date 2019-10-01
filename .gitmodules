@@ -1,0 +1,3 @@
+[submodule "devi_binja"]
+	path = devi_binja
+	url = https://github.com/murx-/devi_binja
