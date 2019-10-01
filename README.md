@@ -24,7 +24,7 @@ python devi_frida.py -m <module_name> -s <sysmbol_to_hook> -o <JSON_output> -p <
 
 ### Disassembler Plugin:
 
-For Binary Ninja see https://github.com/murx-/devi\_binja for IDA follow along here. 
+For Binary Ninja see https://github.com/murx-/devi_binja for IDA follow along here. 
 
 Copy devi\_ida.py to your IDA plugin folder or load the script via File -> Script file... and load devi\_ida.py.
 
