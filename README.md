@@ -22,7 +22,9 @@ Attach to process:
 python devi_frida.py -m <module_name> -s <sysmbol_to_hook> -o <JSON_output> -p <pid_of_target>
 ```
 
-### IDA Plugin
+### Disassembler Plugin:
+
+For Binary Ninja see https://github.com/murx-/devi\_binja for IDA follow along here. 
 
 Copy devi\_ida.py to your IDA plugin folder or load the script via File -> Script file... and load devi\_ida.py.
 
@@ -69,7 +71,14 @@ After:
 
 ## Supported Frameworks
 
-Currently devi only supports Frida as a DBI engine and IDA Pro as a disassembler. Further support is planed.
+Supported DBIs:
+
+- Frida
+
+Supported Disassemblers:
+
+- IDA
+- [Binary Ninja](https://github.com/murx-/devi_binja)
 
 ## Misc
 
