@@ -1,41 +1,73 @@
 import idaapi
 import idautils
+import idc
 import json
+import traceback
+from ida_xref import add_cref
+from ida_nalt import get_root_filename
 
 # From http://www.hexblog.com/?p=886
 # 1) Create the handler class
-class DeviLoadJSONHandler(idaapi.action_handler_t):
+class DeviIDAHandler(idaapi.action_handler_t):
     def __init__(self):
         idaapi.action_handler_t.__init__(self)
+        self.version = 0.2
 
     # Executed when Menu is selected.
     def activate(self, ctx):
         json_file = AskFile(0, ".json", "Load Virtual Calls")
         with open(json_file) as f:
-            json_objects = json.load(f)
-        self.devirtualize_calls(json_objects["calls"])
-        return 1
+            devi_json_data = json.load(f)
+        if self.version < devi_json_data["deviVersion"]:
+            print("[!] devi JSON file has a more recent version than IDA plugin!")
+        try:
+            self.devirtualize_calls(devi_json_data["calls"], devi_json_data["modules"])
+            return 1
+        except:
+            print("[!] An error was encountered!")
+            traceback.print_exc()
+
+        
 
     # This action is always available.
     def update(self, ctx):
         return idaapi.AST_ENABLE_ALWAYS
     
-    def devirtualize_calls(self, call_list):
-        print "[*] Adding " + str(len(call_list)) + " virtual calls!"
+    def devirtualize_calls(self, call_list, modules):
+        #ida_file_name = idc.GetInputFile()
+        ida_file_name = get_root_filename()
+
+        call_cnt = 0
+
+        for module in modules:
+            if module["name"] == ida_file_name:
+                loaded_module = module
+                break
+        
+        start = int(loaded_module["base"], 16)
+        end = start + loaded_module["size"]
+
+        print("[*] Adding virtual calls for module " + ida_file_name)
+
         for v_call in call_list:
             for call in v_call:
-                #AddCodeXref(int(call), int(v_call[call]), fl_CN)
-                # #define fl_CN   17              // Call Near
-                # #define XREF_USER 32            // All user-specified xref types
-                AddCodeXref(int(call), int(v_call[call]), fl_CN | XREF_USER)
-        print "[*] Added " + str(len(call_list)) + " virtual calls!"
+                # Check if call belongs to the current module
+                if start <= int(call, 16) <= end:
+
+                    src = int(call, 16) - start
+                    dst = int(v_call[call], 16) - start
+                    add_cref(src, dst, fl_CN | XREF_USER)
+
+                    call_cnt += 1
+
+            print("[*] Added {} virtual calls for module {}!".format(call_cnt, ida_file_name))
 
 
 # 2) Describe the action
 action_desc = idaapi.action_desc_t(
     'devi:loadJSON',   # The action name. This acts like an ID and must be unique
     'Load Virtual Calls',  # The action text.
-    DeviLoadJSONHandler(),   # The action handler.
+    DeviIDAHandler(),   # The action handler.
     '',      # Optional: the action shortcut
     'Load JSON file with virtual calls',  # Optional: the action tooltip (available in menus/toolbar)
     )           # Optional: the action icon (shows when in menus/toolbars)
