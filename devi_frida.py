@@ -12,9 +12,10 @@ import frida
 
 class Devi:
 
-    def __init__(self, binary, module, out_file, symbol, pid=None, kill=False, verbose=False, debug=False):
+    def __init__(self, binary, traced_module, out_file, symbol, pid=None, kill=False, verbose=False, debug=False):
+        self.version = 0.2
         self.binary = binary
-        self.module = module
+        self.traced_module = traced_module
         self.out_file = out_file
         self.pid = pid
         self.session = None
@@ -24,11 +25,12 @@ class Devi:
         self.verbose = verbose
         self.debug_level = debug
         self.symbol = symbol
+        self.modules = None
 
     def load_script(self):
         absolute_path = path.join(sys.path[0], "devi_frida_tracer.js")
         script = self.session.create_script(
-            Path(absolute_path).read_text() % (self.debug_level, self.module, self.symbol))
+            Path(absolute_path).read_text() % (self.debug_level, self.traced_module, self.symbol))
 
         def on_message(message, data):
             """handle messages send by frida"""
@@ -43,6 +45,7 @@ class Devi:
                 if "callList" in message["payload"]:
                     self.calls.extend(message["payload"]["callList"])
                 elif "moduleMap" in message["payload"]:
+                    self.modules = message["payload"]["moduleMap"]
                     pass
                 elif "symbolMap" in message["payload"]:
                     pass
@@ -99,8 +102,9 @@ class Devi:
 
         with open(self.out_file, "w+") as self.out_file:
             result = dict()
-            result["deviVersion"] = 0.1
+            result["deviVersion"] = self.version
             result["calls"] = self.calls
+            result["modules"] = self.modules
             json.dump(result, self.out_file)
 
 
@@ -121,8 +125,8 @@ class Devi:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Devirtualize Virtual Calls",
-        usage="\tdevi_frida.py -m <module_name> -o <JSON_output> -- <software_to_trace> <arguments for binary>\n"+
-            "\tdevi_frida.py -m <module_name> -s <sysmbol_to_hook> -o <JSON_output> -p <pid_of_target>")
+        usage="\tdevi_frida.py -m <traced_module_name> -o <JSON_output> -- <software_to_trace> <arguments for binary>\n"+
+            "\tdevi_frida.py -m <traced_module_name> -s <sysmbol_to_hook> -o <JSON_output> -p <pid_of_target>")
     parser.add_argument("-o", "--out-file",
                       help="Output location", required=True)
     parser.add_argument(
@@ -143,7 +147,6 @@ if __name__ == '__main__':
 
     # add -t thread option if there are threads and so..
 
-    # TODO add verbosity
     parser.add_argument("cmdline", nargs=argparse.REMAINDER,
                       help="Command line for process to spawn, e.g. ls -lah")
 

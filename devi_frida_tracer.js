@@ -26,7 +26,13 @@ if (myModule != null) {
     console.log("[!] No module found named: " + moduleName )
 }
 
-
+/**
+ * 
+ * @param {*} str 
+ * 
+ * Debug print
+ * 
+ */
 function log_d(str) {
     if (debug == "True") 
     console.log("[+] " + str);
@@ -86,9 +92,9 @@ function traceCalls() {
                         //debug!
                         printDebugCallEvent(event);
 
-                        var src = (event[1] - myModule.base);
+                        var src = (event[1]);
                         var payload = {};
-                        payload[src] = (event[2] - myModule.base).toString(10);
+                        payload[src] = (event[2]).toString(10);
                         callList.push(payload);
                     }
                 }
@@ -117,6 +123,9 @@ function attachInterceptor() {
         onEnter: function (args) {
             log_d('[-] Start Tracing');
             log_d("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+            // Send ModuleMap to devi
+            send({"moduleMap":Process.enumerateModulesSync()})
 
             traceCalls();
         },
