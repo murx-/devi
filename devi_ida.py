@@ -20,6 +20,10 @@ class DeviIDAHandler(idaapi.action_handler_t):
             devi_json_data = json.load(f)
         if self.version < devi_json_data["deviVersion"]:
             print("[!] devi JSON file has a more recent version than IDA plugin!")
+            print("[!] we try parsing anyway!")
+        if self.version > devi_json_data["deviVersion"]:
+            print("[!] Your devi_ida and devi_frida versions are out of sync. Update your devi_ida!")
+
         try:
             self.devirtualize_calls(devi_json_data["calls"], devi_json_data["modules"])
             return 1
@@ -34,7 +38,6 @@ class DeviIDAHandler(idaapi.action_handler_t):
         return idaapi.AST_ENABLE_ALWAYS
     
     def devirtualize_calls(self, call_list, modules):
-        #ida_file_name = idc.GetInputFile()
         ida_file_name = get_root_filename()
 
         call_cnt = 0
@@ -55,7 +58,7 @@ class DeviIDAHandler(idaapi.action_handler_t):
                 if start <= int(call, 16) <= end:
 
                     src = int(call, 16) - start
-                    dst = int(v_call[call], 16) - start
+                    dst = int(v_call[call]) - start
                     add_cref(src, dst, fl_CN | XREF_USER)
 
                     call_cnt += 1
