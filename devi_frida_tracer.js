@@ -1,5 +1,7 @@
 'use strict';
 
+// Version 0.2
+
 var debug = "%s"
 var moduleName = '%s'
 var myModule = Process.findModuleByName(moduleName)

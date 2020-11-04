@@ -45,8 +45,8 @@ class Devi:
                 if "callList" in message["payload"]:
                     self.calls.extend(message["payload"]["callList"])
                 elif "moduleMap" in message["payload"]:
+                    self.info("ModuleMap updated.")
                     self.modules = message["payload"]["moduleMap"]
-                    pass
                 elif "symbolMap" in message["payload"]:
                     pass
                 elif "deviFinished" in message["payload"]:
