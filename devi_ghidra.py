@@ -4,7 +4,7 @@ import json
 import sys
 from ghidra.program.model.symbol.FlowType import UNCONDITIONAL_CALL
 
-DEBUG = False
+DEBUG = True
 VERSION = 0.2
 
 def dprint(str):
@@ -50,7 +50,8 @@ def add_xref(call_src, call_dst , module_name, modules):
 
     # TODO ghidra
     setEOLComment(ghidra_src_address, str(call_dst['comment']))
-    dprint('added xref: '+ hex(call_src['rel_addr']) +' -> ' + str(call_dst['comment']))
+    #dprint('added xref: '+ hex(call_src['rel_addr']) +' -> ' + str(call_dst['comment']))
+    dprint('added xref: '+ str(ghidra_src_address) +' -> ' + str(ghidra_dst_address))
 
 
 # TODO ghidra
@@ -84,5 +85,4 @@ for call in call_list:
     cur_call = get_call_info(src, modules)
     if working_module_name in cur_call['comment']:
         if src+target not in done:
-            done.append(src+target)
             add_xref(cur_call, target, working_module_name, modules)
