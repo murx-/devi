@@ -28,9 +28,13 @@ class Devi:
         self.modules = None
 
     def load_script(self):
-        absolute_path = path.join(sys.path[0], "devi_frida_tracer.js")
-        script = self.session.create_script(
-            Path(absolute_path).read_text() % (self.debug_level, self.traced_module, self.symbol))
+        if sys.platform != "win32":
+            absolute_path = path.join(sys.path[0], "devi_frida_tracer.js")
+            script = self.session.create_script(
+                Path(absolute_path).read_text() % (self.debug_level, self.traced_module, self.symbol))
+        else:
+            absolute_path = path.join(sys.path[0], "windows.js")
+            script = self.session.create_script(Path(absolute_path).read_text())
 
         def on_message(message, data):
             """handle messages send by frida"""
@@ -85,10 +89,20 @@ class Devi:
             self.info("An error occoured while attaching!")
             sys.exit(-1)
 
-        self.log('Tracing binary press control-D to terminate....')
+        if sys.platform != "win32":
+            self.log('Tracing binary press control-D to terminate....')
+        else:
+            self.log('Tracing binary press control-Z Enter to terminate....')
 
         sys.stdin.read()
-
+		
+        with open(self.out_file, "w+") as self.out_file:
+            result = dict()
+            result["deviVersion"] = self.version
+            result["calls"] = self.calls
+            result["modules"] = self.modules
+            json.dump(result, self.out_file)
+		
         try:
             self.log('Detaching, this might take a second...')
             if self.kill:
@@ -100,12 +114,6 @@ class Devi:
         self.debug("Call Overview:")
         self.debug(str(self.calls))
 
-        with open(self.out_file, "w+") as self.out_file:
-            result = dict()
-            result["deviVersion"] = self.version
-            result["calls"] = self.calls
-            result["modules"] = self.modules
-            json.dump(result, self.out_file)
 
 
     def info(self, message):
