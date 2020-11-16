@@ -63,7 +63,7 @@ class DeviIDAHandler(idaapi.action_handler_t):
 
                     call_cnt += 1
 
-            print("[*] Added {} virtual calls for module {}!".format(call_cnt, ida_file_name))
+        print("[*] Added {} virtual calls for module {}!".format(call_cnt, ida_file_name))
 
 
 # 2) Describe the action
