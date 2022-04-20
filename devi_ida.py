@@ -5,6 +5,7 @@ import json
 import traceback
 from ida_xref import add_cref
 from ida_nalt import get_root_filename
+from ida_kernwin import ask_file
 
 # From http://www.hexblog.com/?p=886
 # 1) Create the handler class
@@ -15,7 +16,7 @@ class DeviIDAHandler(idaapi.action_handler_t):
 
     # Executed when Menu is selected.
     def activate(self, ctx):
-        json_file = AskFile(0, ".json", "Load Virtual Calls")
+        json_file = ask_file(0, ".json", "Load Virtual Calls")
         with open(json_file) as f:
             devi_json_data = json.load(f)
         if self.version < devi_json_data["deviVersion"]:
